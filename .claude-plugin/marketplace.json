@@ -1,0 +1,6 @@
+{
+  "name": "claude-skills",
+  "owner": { "name": "niravaparikh" },
+  "metadata": { "description": "Personal collection of Claude skills, one plugin per skill." },
+  "plugins": []
+}
