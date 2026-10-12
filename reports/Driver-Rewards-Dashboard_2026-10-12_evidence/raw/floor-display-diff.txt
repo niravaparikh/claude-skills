@@ -1,0 +1,18 @@
+viewport 1536 864 1536 864
+
+== only in prototype ==
+  button|management
+  button|floor display
+  button|driver pwa
+
+== only in live ==
+  div|screen not set up open this display once with its screen to
+  p|screen not set up
+  p|open this display once with its screen token to pair it. an 
+  p|loading…
+  a|↔ scroll view
+  a|↕ vertical
+
+== style diffs on matching text ==
+
+elements with diffs: 0

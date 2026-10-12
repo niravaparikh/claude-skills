@@ -1,0 +1,47 @@
+viewport 1536 864 1536 864
+
+== only in prototype ==
+  button|management
+  button|floor display
+  button|driver pwa
+  a|dash linen hire uk performance-to-zero
+  nav|scoreboard daily input quarterly payout audit log manager bo
+  a|scoreboard
+  a|daily input
+  a|quarterly payout
+  a|audit log
+  a|manager bonus
+  a|users
+  a|settings
+  a|incidents ← prolius
+  h1|manager incentive scorecard
+  select|dash linen just 4 linen combined fleet
+  td|90%+
+  td|£600
+  td|88–89.9%
+  td|£500
+  td|85–87.9%
+  td|£350
+  td|82–84.9%
+  td|£200
+  td|below 82%
+  td|£0
+  td|25%+ reduction
+  td|£225
+  td|15–24% reduction
+  td|£175
+  td|5–14% reduction
+  td|£100
+  td|no change
+  td|£50
+  td|increase
+
+== only in live ==
+  h2|unexpected application error!
+  h3|cannot read properties of undefined (reading 'find')
+  p|💿 hey developer 👋
+  p|you can provide a way better ux than this when your app thro
+
+== style diffs on matching text ==
+
+elements with diffs: 0

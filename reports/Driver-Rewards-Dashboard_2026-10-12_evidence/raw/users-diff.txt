@@ -1,0 +1,252 @@
+viewport 1536 864 1536 864
+
+== only in prototype ==
+  button|management
+  button|floor display
+  button|driver pwa
+  a|dash linen hire uk performance-to-zero
+  nav|scoreboard daily input quarterly payout audit log manager bo
+  a|incidents ← prolius
+  button|admins (3)
+  button|drivers (auto-synced · 12)
+  th|region
+  td|helen marsden
+  td|07700 900 101
+  td|combined
+  td|hiten
+  td|07700 900 102
+  td|subordinate admin
+  td|dash linen
+  td|today, 09:02
+  td|editsuspend
+  button|suspend
+  td|alex morton
+  td|07700 900 103
+  td|management view
+  td|yesterday
+
+== only in live ==
+  p|dash linen hire uk
+  p|bespoke laundry service
+  nav|scoreboard daily input quarterly payout review queue audit l
+  a|review queue
+  a|regions
+  p|you're on track!
+  p|keep performing above 85% to stay in green.
+  button|this week
+  header|s super-admin
+  button|s super-admin
+  p|admins manually invited · drivers auto-synced from prolius
+  button|admins (1)
+  button|drivers (auto-synced · 0)
+  td|super-admin
+  td|•••• ••0123
+
+== style diffs on matching text ==
+
+[a|scoreboard] rect proto {'x': 12, 'y': 127, 'w': 209, 'h': 42} live {'x': 10, 'y': 78, 'w': 235, 'h': 40}
+   fontSize: proto=13.5px | live=13px
+   lineHeight: proto=20.25px | live=19.5px
+   color: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopColor: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopStyle: proto=none | live=solid
+   borderRadius: proto=8px | live=9px
+   marginBottom: proto=0px | live=3px
+   paddingTop: proto=11px | live=10px
+   paddingRight: proto=13px | live=12px
+   paddingBottom: proto=11px | live=10px
+   paddingLeft: proto=13px | live=12px
+   position: proto=relative | live=static
+   transition: proto=0.12s | live=background 0.12s, color 0.12s
+
+[a|daily input] rect proto {'x': 12, 'y': 171, 'w': 209, 'h': 42} live {'x': 10, 'y': 121, 'w': 235, 'h': 40}
+   fontSize: proto=13.5px | live=13px
+   lineHeight: proto=20.25px | live=19.5px
+   color: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopColor: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopStyle: proto=none | live=solid
+   borderRadius: proto=8px | live=9px
+   marginBottom: proto=0px | live=3px
+   paddingTop: proto=11px | live=10px
+   paddingRight: proto=13px | live=12px
+   paddingBottom: proto=11px | live=10px
+   paddingLeft: proto=13px | live=12px
+   position: proto=relative | live=static
+   transition: proto=0.12s | live=background 0.12s, color 0.12s
+
+[a|quarterly payout] rect proto {'x': 12, 'y': 215, 'w': 209, 'h': 42} live {'x': 10, 'y': 163, 'w': 235, 'h': 40}
+   fontSize: proto=13.5px | live=13px
+   lineHeight: proto=20.25px | live=19.5px
+   color: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopColor: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopStyle: proto=none | live=solid
+   borderRadius: proto=8px | live=9px
+   marginBottom: proto=0px | live=3px
+   paddingTop: proto=11px | live=10px
+   paddingRight: proto=13px | live=12px
+   paddingBottom: proto=11px | live=10px
+   paddingLeft: proto=13px | live=12px
+   position: proto=relative | live=static
+   transition: proto=0.12s | live=background 0.12s, color 0.12s
+
+[a|audit log] rect proto {'x': 12, 'y': 260, 'w': 209, 'h': 42} live {'x': 10, 'y': 248, 'w': 235, 'h': 40}
+   fontSize: proto=13.5px | live=13px
+   lineHeight: proto=20.25px | live=19.5px
+   color: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopColor: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopStyle: proto=none | live=solid
+   borderRadius: proto=8px | live=9px
+   marginBottom: proto=0px | live=3px
+   paddingTop: proto=11px | live=10px
+   paddingRight: proto=13px | live=12px
+   paddingBottom: proto=11px | live=10px
+   paddingLeft: proto=13px | live=12px
+   position: proto=relative | live=static
+   transition: proto=0.12s | live=background 0.12s, color 0.12s
+
+[a|manager bonus] rect proto {'x': 12, 'y': 304, 'w': 209, 'h': 42} live {'x': 10, 'y': 291, 'w': 235, 'h': 40}
+   fontSize: proto=13.5px | live=13px
+   lineHeight: proto=20.25px | live=19.5px
+   color: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopColor: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopStyle: proto=none | live=solid
+   borderRadius: proto=8px | live=9px
+   marginBottom: proto=0px | live=3px
+   paddingTop: proto=11px | live=10px
+   paddingRight: proto=13px | live=12px
+   paddingBottom: proto=11px | live=10px
+   paddingLeft: proto=13px | live=12px
+   position: proto=relative | live=static
+   transition: proto=0.12s | live=background 0.12s, color 0.12s
+
+[a|users] rect proto {'x': 12, 'y': 348, 'w': 209, 'h': 42} live {'x': 10, 'y': 333, 'w': 235, 'h': 40}
+   fontSize: proto=13.5px | live=13px
+   fontWeight: proto=500 | live=600
+   lineHeight: proto=20.25px | live=19.5px
+   backgroundColor: proto=rgb(56, 130, 246) | live=rgba(0, 0, 0, 0)
+   borderTopStyle: proto=none | live=solid
+   borderRadius: proto=8px | live=9px
+   boxShadow: proto=rgba(56, 130, 246, 0.4) 0px 4px 12px 0px | live=rgb(47, 123, 255) 3px 0px 0px 0px inset
+   marginBottom: proto=0px | live=3px
+   paddingTop: proto=11px | live=10px
+   paddingRight: proto=13px | live=12px
+   paddingBottom: proto=11px | live=10px
+   paddingLeft: proto=13px | live=12px
+   position: proto=relative | live=static
+   transition: proto=0.12s | live=background 0.12s, color 0.12s
+
+[a|settings] rect proto {'x': 12, 'y': 392, 'w': 209, 'h': 42} live {'x': 10, 'y': 418, 'w': 235, 'h': 40}
+   fontSize: proto=13.5px | live=13px
+   lineHeight: proto=20.25px | live=19.5px
+   color: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopColor: proto=rgba(255, 255, 255, 0.62) | live=rgba(255, 255, 255, 0.5)
+   borderTopStyle: proto=none | live=solid
+   borderRadius: proto=8px | live=9px
+   marginBottom: proto=0px | live=3px
+   paddingTop: proto=11px | live=10px
+   paddingRight: proto=13px | live=12px
+   paddingBottom: proto=11px | live=10px
+   paddingLeft: proto=13px | live=12px
+   position: proto=relative | live=static
+   transition: proto=0.12s | live=background 0.12s, color 0.12s
+
+[h1|user management] rect proto {'x': 272, 'y': 160, 'w': 470, 'h': 30} live {'x': 280, 'y': 80, 'w': 339, 'h': 31}
+   fontSize: proto=20px | live=26px
+   lineHeight: proto=30px | live=31.2px
+   borderTopStyle: proto=none | live=solid
+
+[button|invite admin] rect proto {'x': 1386, 'y': 160, 'w': 126, 'h': 37} live {'x': 1386, 'y': 80, 'w': 126, 'h': 36}
+   lineHeight: proto=normal | live=19.5px
+   backgroundColor: proto=rgb(56, 130, 246) | live=rgb(59, 130, 246)
+   borderTopColor: proto=rgb(56, 130, 246) | live=rgb(255, 255, 255)
+   borderTopWidth: proto=0.8px | live=0px
+   borderRadius: proto=7px | live=8px
+   paddingTop: proto=10px | live=8px
+   paddingBottom: proto=10px | live=8px
+   transition: proto=0.1s | live=opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1)
+
+[th|name] rect proto {'x': 273, 'y': 285, 'w': 183, 'h': 41} live {'x': 281, 'y': 240, 'w': 227, 'h': 41}
+   color: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   backgroundColor: proto=rgb(248, 250, 252) | live=rgba(0, 0, 0, 0)
+   borderTopColor: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   borderTopStyle: proto=none | live=solid
+   cursor: proto=pointer | live=auto
+
+[th|mobile] rect proto {'x': 456, 'y': 285, 'w': 180, 'h': 41} live {'x': 508, 'y': 240, 'w': 188, 'h': 41}
+   color: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   backgroundColor: proto=rgb(248, 250, 252) | live=rgba(0, 0, 0, 0)
+   borderTopColor: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   borderTopStyle: proto=none | live=solid
+   cursor: proto=pointer | live=auto
+
+[th|role] rect proto {'x': 636, 'y': 285, 'w': 220, 'h': 41} live {'x': 696, 'y': 240, 'w': 240, 'h': 41}
+   color: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   backgroundColor: proto=rgb(248, 250, 252) | live=rgba(0, 0, 0, 0)
+   borderTopColor: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   borderTopStyle: proto=none | live=solid
+   cursor: proto=pointer | live=auto
+
+[th|status] rect proto {'x': 1004, 'y': 285, 'w': 120, 'h': 41} live {'x': 936, 'y': 240, 'w': 188, 'h': 41}
+   color: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   backgroundColor: proto=rgb(248, 250, 252) | live=rgba(0, 0, 0, 0)
+   borderTopColor: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   borderTopStyle: proto=none | live=solid
+   cursor: proto=pointer | live=auto
+
+[th|last login] rect proto {'x': 1124, 'y': 285, 'w': 158, 'h': 41} live {'x': 1125, 'y': 240, 'w': 217, 'h': 41}
+   color: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   backgroundColor: proto=rgb(248, 250, 252) | live=rgba(0, 0, 0, 0)
+   borderTopColor: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   borderTopStyle: proto=none | live=solid
+   cursor: proto=pointer | live=auto
+
+[th|actions] rect proto {'x': 1282, 'y': 285, 'w': 229, 'h': 41} live {'x': 1341, 'y': 240, 'w': 170, 'h': 41}
+   color: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   backgroundColor: proto=rgb(248, 250, 252) | live=rgba(0, 0, 0, 0)
+   borderTopColor: proto=rgb(107, 114, 128) | live=rgb(100, 116, 139)
+   borderTopStyle: proto=none | live=solid
+   cursor: proto=pointer | live=auto
+
+[td|super admin] rect proto {'x': 636, 'y': 326, 'w': 220, 'h': 53} live {'x': 696, 'y': 281, 'w': 240, 'h': 53}
+   color: proto=rgb(50, 55, 60) | live=rgb(15, 23, 42)
+   borderTopColor: proto=rgb(50, 55, 60) | live=rgb(15, 23, 42)
+   borderTopStyle: proto=none | live=solid
+   paddingTop: proto=12px | live=13px
+   paddingBottom: proto=12px | live=13px
+   cursor: proto=pointer | live=auto
+
+[td|active] rect proto {'x': 1004, 'y': 326, 'w': 120, 'h': 53} live {'x': 936, 'y': 281, 'w': 188, 'h': 53}
+   color: proto=rgb(50, 55, 60) | live=rgb(15, 23, 42)
+   borderTopColor: proto=rgb(50, 55, 60) | live=rgb(15, 23, 42)
+   borderTopStyle: proto=none | live=solid
+   paddingTop: proto=12px | live=13px
+   paddingBottom: proto=12px | live=13px
+   cursor: proto=pointer | live=auto
+
+[td|today, 08:14] rect proto {'x': 1124, 'y': 326, 'w': 158, 'h': 53} live {'x': 1125, 'y': 281, 'w': 217, 'h': 53}
+   color: proto=rgb(50, 55, 60) | live=rgb(100, 116, 139)
+   borderTopColor: proto=rgb(50, 55, 60) | live=rgb(100, 116, 139)
+   borderTopStyle: proto=none | live=solid
+   paddingTop: proto=12px | live=13px
+   paddingBottom: proto=12px | live=13px
+   cursor: proto=pointer | live=auto
+
+[td|edit] rect proto {'x': 1282, 'y': 326, 'w': 229, 'h': 53} live {'x': 1341, 'y': 281, 'w': 170, 'h': 53}
+   color: proto=rgb(50, 55, 60) | live=rgb(15, 23, 42)
+   borderTopColor: proto=rgb(50, 55, 60) | live=rgb(15, 23, 42)
+   borderTopStyle: proto=none | live=solid
+   paddingTop: proto=12px | live=13px
+   paddingBottom: proto=12px | live=13px
+   cursor: proto=pointer | live=auto
+
+[button|edit] rect proto {'x': 1298, 'y': 338, 'w': 44, 'h': 28} live {'x': 1357, 'y': 294, 'w': 44, 'h': 26}
+   lineHeight: proto=normal | live=16.5px
+   color: proto=rgb(0, 0, 0) | live=rgb(71, 85, 105)
+   borderRadius: proto=5px | live=4px
+   marginRight: proto=3px | live=0px
+   paddingTop: proto=7px | live=4px
+   paddingBottom: proto=7px | live=4px
+   display: proto=inline-block | live=block
+   transition: proto=0.1s | live=color 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic
+
+elements with diffs: 20
