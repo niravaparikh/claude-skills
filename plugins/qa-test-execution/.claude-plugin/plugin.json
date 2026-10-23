@@ -1,0 +1,5 @@
+{
+  "name": "qa-test-execution",
+  "description": "Execute a folder of [API]/[Browser] test cases (Excel/CSV) against a live app with parallel agents, using a session the user logs into themselves, and write a feature-wise HTML results report",
+  "version": "0.1.0"
+}

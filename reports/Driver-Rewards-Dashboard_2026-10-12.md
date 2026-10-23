@@ -1,147 +1,178 @@
 # UI comparison: Driver Rewards Dashboard (2026-10-12)
 
-- Prototype: `C:\Users\NIRAVA\Documents\GitHub\AI-Boilerplate\Portfolio\service\logistics-supply-chain\fleet-management\dash-linen\driver-reward-dashboard\prototype\hi-fi\index.html` (runnable HTML/CSS/JS, single file) - never copied into the repo. Served read-only from its own folder on `127.0.0.1:8765` because `file://` is blocked; server stopped afterwards.
-- Live site: https://d38gw103adeh1z.cloudfront.net/login (compared pages under `/admin`, logged in as Super-Admin by the user)
-- Breakpoints: **1536 x 864 CSS px only** (user asked for the laptop's own size: 1920x1080 panel at 125% scaling). Other widths were not tested, so responsive behaviour is not covered.
-- Pages compared: 7 matched (6 full comparisons + Floor Display, compared in its unpaired state only) / crashed live page: 1 (Manager Bonus) / prototype screens with no comparable live page: 3 (Driver PWA - role-gated, Driver Detail - needs a driver, Incidents <- Prolius - not a screen in the prototype) / live pages with no prototype counterpart: 6 (see "Live-only pages")
-- Route discovery (added in the second pass): the live site answers HTTP 200 for every path (SPA fallback), so I read the route table from its own JS bundle (`/assets/index-BEOP8szt.js`). Live routes: `/login`, `/verify-otp`, `/set-password`, `/forgot-password`, `/display`, `/display/scroll`, `/display/vertical`, `/dashboard`, `/dashboard/league`, `/dashboard/profile`, `/admin`, `/admin/drivers/:id`, `/admin/drivers/:id/coaching`, `/admin/daily-input`, `/admin/reports`, `/admin/users`, `/admin/audit`, `/admin/manager-bonus`, `/admin/settings`, `/admin/settings/regions`, `/admin/queues`, `/management`, `/management/rankings`, `/management/insights/:id`.
+- Prototype: `C:\Users\NIRAVA\Documents\GitHub\AI-Boilerplate\Portfolio\service\logistics-supply-chain\fleet-management\dash-linen\driver-reward-dashboard\prototype\hi-fi\index.html` (runnable HTML/CSS/JS, single file) - never copied into the repo. Served read-only from its own folder because `file://` is blocked; the server was stopped afterwards.
+- Live site: https://d38gw103adeh1z.cloudfront.net/login (pages under `/admin`, logged in as Super-Admin by the user)
+- Breakpoints: **1536 x 864 CSS px only** (the user's laptop: 1920x1080 panel at 125% scaling). Other widths were not tested.
+- Pages compared: 8 (7 admin screens plus Floor Display in its unpaired state) / not comparable: Driver PWA, Driver detail / live-only pages: 6.
+- Rules applied: this version applies the static-vs-dynamic rules in the skill's `references/dynamic-content.md`. Names, money, counts, dates, periods, empty/disabled/unselected states and prototype-only devices are **not** reported as deviations. They are listed under "Excluded", and anything that might be conditional is under "Needs confirmation" with no severity.
+- Method note: the classification was done on the evidence already captured. The first pass truncated element text to 60 characters, so wording findings were re-checked against full text from the prototype source and the live page. Style extraction was capped at 400 elements per page.
+- Route discovery: the live site answers HTTP 200 for every path (SPA fallback), so the route table was read from its JS bundle. Routes: `/login`, `/verify-otp`, `/set-password`, `/forgot-password`, `/display`, `/display/scroll`, `/display/vertical`, `/dashboard`, `/dashboard/league`, `/dashboard/profile`, `/admin`, `/admin/drivers/:id`, `/admin/drivers/:id/coaching`, `/admin/daily-input`, `/admin/reports`, `/admin/users`, `/admin/audit`, `/admin/manager-bonus`, `/admin/settings`, `/admin/settings/regions`, `/admin/queues`, `/management`, `/management/rankings`, `/management/insights/:id`.
 
-**Important limitation: the live site has almost no data** (0 drivers, 0 incidents, 1 admin, 1 audit entry), while the prototype is seeded with 12 drivers. Anything that only renders with data (podium, driver cards, table rows, RAG counts) could not be compared and is listed under "Not verified". No test records were created, so nothing needed cleanup.
+**Data parity:** the live site has almost no data (0 drivers, 0 incidents, 1 admin, 1 audit entry) and the prototype is seeded with 12 drivers. Data-driven UI could not be compared and is under "Not verified". No test records were created, so nothing needed cleanup.
 
 ## Summary
+Confirmed findings only (static content or tokens, same state, measured on both sides).
+
 | Severity | Count |
 |---|---|
-| Critical | 12 |
-| Major | 19 |
-| Minor | 14 |
+| Critical | 7 |
+| Major | 11 |
+| Minor | 13 |
+
+Also: 10 items under Needs confirmation, 19 differences excluded as dynamic or state-dependent, 5 observations. None of those are counted above.
 
 ## Screen mapping
 | Prototype screen | Live page | Match basis | Confirmed by user |
 |---|---|---|---|
-| Scoreboard (`mgmt-sc`) | `/admin` | nav label + h1 "Driver Scoreboard" | No (exact title match, not asked) |
+| Scoreboard (`mgmt-sc`) | `/admin` | nav label + h1 "Driver Scoreboard" | No (exact title match) |
 | Daily Input (`mgmt-input`) | `/admin/daily-input` | nav label + h1 "Daily Driver Input" | No |
 | Quarterly Payout (`mgmt-rep`) | `/admin/reports` | nav label + h1 | No |
 | Audit Log (`mgmt-audit`) | `/admin/audit` | nav label + h1 | No |
-| Manager Bonus (`mgmt-manager`) | `/admin/manager-bonus` | nav label (live crashes) | No |
+| Manager Bonus (`mgmt-manager`) | `/admin/manager-bonus` | nav label (live page crashes) | No |
 | User Management (`mgmt-users`) | `/admin/users` | nav label + h1 | No |
 | Scoring Parameters (`mgmt-settings`) | `/admin/settings` | nav label + h1 | No |
-| Floor Display shell (`shell-floor`) | `/display` | route in live bundle + same title "Driver Performance League" | No |
-| Driver PWA shell (`shell-pwa`) | `/dashboard`, `/dashboard/league`, `/dashboard/profile` | route names match prototype tabs Score / League / Profile; **not reachable as Super-Admin** (redirects to `/login`) | - |
-| Driver detail (`mgmt-det`, opened via `showDet`) | `/admin/drivers/:id` | route in bundle; needs a real driver id and there are 0 drivers | - |
-| Incidents <- Prolius (`nav-log`) | none | in the prototype this link is a placeholder (`onclick="return false"`), not a screen, so there is nothing to compare | - |
+| Floor Display (`shell-floor`) | `/display` | route in live bundle + same title "Driver Performance League" | No |
+| Driver PWA (`shell-pwa`) | `/dashboard`, `/dashboard/league`, `/dashboard/profile` | route names match Score / League / Profile; **not reachable as Super-Admin** (redirects to `/login`) | - |
+| Driver detail (`mgmt-det`) | `/admin/drivers/:id` | route in bundle; needs a driver id and there are 0 drivers | - |
+| Incidents <- Prolius (`nav-log`) | none | a placeholder link in the prototype (`onclick="return false"`), not a screen | - |
 
-## Findings
-Raw computed-style dumps and diffs are in `Driver-Rewards-Dashboard_2026-10-12_evidence/raw/` (`proto-*.json`, `live-*.json`, `*-diff.txt`). Screenshots: `proto-<screen>.png` vs `live-<screen>.png` in the evidence folder. Font family matched on all compared text elements, so none is reported.
+## Findings (confirmed)
+Raw computed-style dumps and diffs are in `Driver-Rewards-Dashboard_2026-10-12_evidence/raw/`. Screenshots: `proto-<screen>.png` vs `live-<screen>.png`. Font family matched on all other compared text, so none is reported.
 
 ### Shell (every page) @ 1536px
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 1 | Critical | Missing element | Header RAG counters | "8 Green / 3 Amber / 1 Red" in the top bar | absent | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
-| 2 | Critical | Missing element | Notification bell | present with unread dot | absent | same as #1 |
-| 3 | Critical | Missing element | Role banner "Super Admin - Full access - user management..." | yellow strip under header | absent | same as #1 |
-| 4 | Major | Missing element | Sidebar "Incidents <- Prolius" link | present, but a non-navigating placeholder in the prototype (`onclick="return false"`) | absent (live has "Review Queue" instead, see Live-only pages) | same as #1 |
-| 5 | Major | Layout | Sidebar width / nav item box | items 209px wide at x=12 (sidebar ~233px) | items 235px wide at x=10 (sidebar 256px) | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt) |
-| 6 | Major | Style | Active nav item | solid `rgb(56,130,246)` fill, shadow `rgba(56,130,246,.4) 0 4px 12px`, chevron | transparent fill with 3px left inset bar `rgb(47,123,255)`, no chevron | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
-| 7 | Minor | Typography/spacing | Nav items | 13.5px / line-height 20.25px / weight 500 / colour `rgba(255,255,255,.62)` / radius 8px / padding 11px 13px / margin-bottom 0 | 13px / 19.5px / weight 600 (active) / `rgba(255,255,255,.5)` / 9px / 10px 12px / 3px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt) |
-| 8 | Major | Branding | Sidebar logo / brand block | blue square icon, "Dash Linen Hire UK" + "PERFORMANCE-TO-ZERO" | monitor outline icon, "DASH LINEN HIRE UK" + "BESPOKE LAUNDRY SERVICE" | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
-| 9 | Major | Layout | Header content | "Fleet bonus remaining £343" plus user chip "Helen Marsden" with initials in blue | "Fleet avg: £0 remaining" and chip "Super-Admin" with dark circle | same as #1 |
-| 10 | Major | Typography | Page `h1` (all 6 pages) | 20px / line-height 30px | 26px / 31.2px | [scoreboard](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt), [users](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
-| 11 | Minor | Colour | Primary blue | `rgb(56,130,246)` #3882F6 | `rgb(59,130,246)` #3B82F6 | [users diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
-| 12 | Minor | Style | Primary/secondary buttons | radius 7px, padding 10px, 0.8px border, transition `0.1s` | radius 8px, padding 8px, 0px border, `opacity 0.15s cubic-bezier(.4,0,.2,1)` | [users diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
-| 13 | Major | Console | CSP blocks inline fonts | none seen on prototype besides 1 unrelated entry | 8 errors on every page load: `font-src 'self'` blocks `data:font/woff2`/`woff` fonts | [console](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/live-console-errors.txt) |
+| 1 | Critical | Missing element | Notification bell (static button in the prototype header) | present with unread dot | absent | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
+| 2 | Major | Layout | Sidebar width / nav item box | items 209px wide at x=12 (sidebar ~233px) | items 235px wide at x=10 (sidebar 256px) | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt) |
+| 3 | Major | Style | Active nav item | solid `rgb(56,130,246)` fill, shadow `rgba(56,130,246,.4) 0 4px 12px`, chevron | transparent fill with 3px left inset bar `rgb(47,123,255)`, no chevron | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
+| 4 | Minor | Typography/spacing | Nav items (inactive) | 13.5px / line-height 20.25px / colour `rgba(255,255,255,.62)` / radius 8px / padding 11px 13px / margin-bottom 0 | 13px / 19.5px / `rgba(255,255,255,.5)` / 9px / 10px 12px / 3px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt) |
+| 5 | Major | Branding | Sidebar logo icon and brand block styling (estimated from screenshots) | blue rounded-square icon, brand name in mixed case | monitor outline icon, brand name in capitals | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
+| 6 | Major | Typography | Page `h1` (all admin pages) | 20px / line-height 30px | 26px / 31.2px | [scoreboard](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt), [users](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
+| 7 | Minor | Colour | Primary blue | `rgb(56,130,246)` #3882F6 | `rgb(59,130,246)` #3B82F6 | [users diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
+| 8 | Minor | Style | Buttons | radius 7px, padding 10px, 0.8px border, transition `0.1s` | radius 8px, padding 8px, 0px border, `opacity 0.15s cubic-bezier(.4,0,.2,1)` | [users diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
+| 9 | Minor | Content | Sidebar "Quick stats" row set | Avg Tele %, Avg Deductions, Green, Amber, Red | Avg Tele %, Green, Amber, Red, No Data (labels only; values are data) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
 
 ### Scoreboard (`/admin`) @ 1536px
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 14 | Critical | Missing element | "Floor Display" button next to the view toggle | present | absent; live has an icon-only grid/list toggle instead of "List View" text button | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
-| 15 | Major | Layout | RAG filter chips | "All Drivers (12)", "Green (8)", "Amber (3)", "Red (1)" as buttons | single "All Drivers (0)" dropdown at far right | same as #14 |
-| 16 | Major | Style | Period pills | radius 20px, 11px, weight 600, padding 12px; locked pills opacity 1, cursor pointer | pill radius (2.68e7px), 12px, weight 500, padding 16px; locked pills opacity 0.55, cursor default | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt) |
-| 17 | Major | Style | Business segmented control | active label colour `rgb(56,130,246)`, radius 6px | active label `rgb(15,23,42)`, pill radius; inactive text `rgb(71,85,105)` vs `rgb(95,107,122)` | same as #16 |
-| 18 | Minor | Content | Extra banner | none | "No Employee-of-the-Month candidate available for October 2026 yet." | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
-| 19 | Minor | Content | Quick stats panel | Avg Tele % 88%, Avg Deductions 2.1, Green 8... (seeded) | has "No Data" row instead of "Avg Deductions"; values empty (no data) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
+| 10 | Critical | Missing element | "Floor Display" button beside the view toggle (static markup in the prototype) | present | absent | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-scoreboard.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-scoreboard.png) |
+| 11 | Minor | Layout | View toggle | text button "List View" with icon | icon-only grid/list toggle | same as #10 |
+| 12 | Major | Style | Period pills (Q2 2026, Q1 2026, ...) | radius 20px, font 11px, weight 600, padding 0 12px | pill radius (2.68e7px), 12px, weight 500, padding 0 16px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/scoreboard-diff.txt) |
+| 13 | Major | Style | Business segmented control | active label `rgb(56,130,246)`, radius 6px; inactive text `rgb(95,107,122)` | active label `rgb(15,23,42)`, pill radius; inactive text `rgb(71,85,105)` | same as #12 |
 
 ### Daily Input (`/admin/daily-input`) @ 1536px
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 20 | Critical | Content | Subtitle | "18 Apr 2026 - Fri - Sickness + complaints - all drivers default to All good. Incidents come from Prolius automatically - see Incidents tab. Manual entry below is for fallback only..." | "Mon, 12 Oct 2026 - every driver defaults to All good. Log..." (different wording; the pointer to the Incidents tab is gone; the prototype date is sample data) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-daily-input.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-daily-input.png) |
-| 21 | Critical | Missing element | "Save today's input" button | present | absent | same as #20 |
-| 22 | Major | Colour | "Log incident (manual override)" button | white background, red text `rgb(220,38,38)` | red background `rgb(220,38,38)`, white text; radius 8px vs 7px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/daily-input-diff.txt) |
+| 14 | Minor | Copy | Subtitle wording (date excluded as data) | "... all drivers default to All good. Incidents come from Prolius automatically - see Incidents tab. Manual entry below is for fallback only (customer phoned before Prolius record landed)." | "... Every driver defaults to All good. Log sickness, absences and complaints below. Incidents will sync from Prolius - add one manually only as a fallback." | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-daily-input.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-daily-input.png) |
+| 15 | Major | Colour | "Log incident (manual override)" button | white background, red text `rgb(220,38,38)` | red background `rgb(220,38,38)`, white text; radius 8px vs 7px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/daily-input-diff.txt) |
 
 ### Quarterly Payout (`/admin/reports`) @ 1536px
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 23 | Critical | Content | Table column header | "BONUS REMAINING" | "BASE POT" | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-payout.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-payout.png) |
-| 24 | Major | Layout | Summary cards | none | 4 stat cards (Total deducted, Average bonus remaining, Drivers with a score, Ready to export) plus "No closed quarters yet" section | same as #23 |
-| 25 | Minor | Content | Export button / subtitle | "Export Q2 2026 Payout"; subtitle "Q2 2026 - Week 3 of 13 - End-of-quarter bonus settlement" | "Export Payout"; subtitle "End-of-quarter bonus settlement" | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/payout-diff.txt) |
-| 26 | Minor | Style | Table header cells (here and Audit, Users) | background `rgb(248,250,252)`, colour `rgb(107,114,128)`, cursor pointer | transparent, `rgb(100,116,139)`, cursor auto (prototype implies sortable; live sort not tested) | [payout diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/payout-diff.txt) |
-
-### Audit Log (`/admin/audit`) @ 1536px
-| # | Severity | Category | Element | Prototype | Live | Evidence |
-|---|---|---|---|---|---|---|
-| 27 | Minor | Layout | Column widths | Timestamp 222, Actor 191, Action 268, Target 270, Before/after 288 | 162, 343, 94, 101, 530 | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-audit.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-audit.png) |
-| 28 | Minor | Content | Subtitle | prototype subtitle is injected by JS (`—` in source) | "Full cross-admin change log - for dispute resolution" | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-audit.png) |
+| 16 | Critical | Content | Table column header | "BONUS REMAINING" | "BASE POT" | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-payout.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-payout.png) |
+| 17 | Major | Content | Summary card labels (cards 3 and 4; the values are data) | "Incidents (from Prolius)", "Nil Defect Compliance" | "Drivers with a score", "Ready to export" | same as #16 |
+| 18 | Minor | Style | Table header cells (also Audit, Users) | background `rgb(248,250,252)`, colour `rgb(107,114,128)`, cursor pointer | transparent, `rgb(100,116,139)`, cursor auto | [payout diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/payout-diff.txt) |
+| 19 | Minor | Style | Export button | text only | download icon before the text | same as #16 |
 
 ### Manager Bonus (`/admin/manager-bonus`) @ 1536px
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 29 | Critical | Broken page | Whole page | "Manager Incentive Scorecard" with region select, bonus tiers (90%+ £600 ...) | "Unexpected Application Error! TypeError: Cannot read properties of undefined (reading 'find')" from `ManagerBonusPage-BzAtYXFe.js:1:647`. Possibly caused by the empty dataset, so re-test with data, but a crash on empty data is still a defect | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-manager.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-manager.png) |
+| 20 | Critical | Broken page | Whole page | "Manager Incentive Scorecard" renders | "Unexpected Application Error! TypeError: Cannot read properties of undefined (reading 'find')" from `ManagerBonusPage-BzAtYXFe.js:1:647`. It may be triggered by the empty dataset, but crashing on empty data is itself a defect | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-manager.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-manager.png) |
 
 ### User Management (`/admin/users`) @ 1536px
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 30 | Critical | Content | Subtitle | "Super Admin only - Admins manually invited - Drivers auto-synced from **fleetmastr**" | "Admins manually invited - Drivers auto-synced from **Prolius**" (and "Super Admin only" dropped) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-users.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-users.png) |
-| 31 | Major | Missing element | "Region" column | present | absent (columns: Name, Mobile, Role, Status, Last login, Actions) | same as #30 |
-| 32 | Major | Missing element | "Suspend" action | Edit + Suspend per row | Edit only (on the single Super-Admin row; may be intentional for own account, re-test with a second admin) | same as #30 |
-| 33 | Minor | Style | Table cells | text `rgb(50,55,60)`, padding 12px; "Last login" same colour | `rgb(15,23,42)`, 13px; "Last login" `rgb(100,116,139)` | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
+| 21 | Major | Missing element | "Region" column (static `th` in the prototype) | present | absent (live columns: Name, Mobile, Role, Status, Last login, Actions) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-users.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-users.png) |
+| 22 | Minor | Style | Table cells | text `rgb(50,55,60)`, padding 12px | `rgb(15,23,42)`, padding 13px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/users-diff.txt) |
 
 ### Scoring Parameters (`/admin/settings`) @ 1536px
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 34 | Critical | Content | Subtitle | "...Changes apply to the next scoring cycle - All changes are audit-logged" | "...Changes apply from now forward - All changes are audit-logged - **version undefined**" (unresolved variable shown to users) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-settings.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-settings.png) |
-| 35 | Critical | Missing element | "Super Admin" badge beside Save button; yellow "Effective from save-time forward..." notice; blue "Locked for the current cycle (Q2 2026 - ends 30 Jun)" notice | all present | none present (text search of the page confirmed no "effective from") | same as #34 |
-| 36 | Critical | Missing element | "Add custom deduction" section with Edit/Archive actions | present | absent (text search for "custom deduction" returned false) | raw: [settings diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/settings-diff.txt) |
-| 37 | Major | Content | Pilot-mode copy | "For the September pilot quarter... Turn off at the January launch" and "driver PWA" | "For the pilot quarter... Turn off at launch" and "driver app" | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-settings.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-settings.png) |
-| 38 | Major | Layout | Bonus period radios | selected "Calendar quarter" card highlighted, others unselected; period locked | no option selected; options are plain radios | same as #37 |
-| 39 | Minor | Typography | Form field labels | letter-spacing 0.4px, colour `rgb(95,107,122)`, margin-bottom 6px | 0.3px, `rgb(71,85,105)`, 0px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/settings-diff.txt) |
-| 40 | Minor | Typography | Native radio input | Arial 13.33px, `rgb(84,84,84)` | Roboto 14px, `rgb(15,23,42)` | same as #39 |
-| 41 | Minor | Style | Save Changes button | enabled, `rgb(56,130,246)`, radius 7px | disabled (opacity 0.5; expected when no edits), `rgb(59,130,246)`, radius 8px | same as #39 |
-| 42 | Minor | Layout | Live-only content | none | Region selector ("Combined (shared default) / Dash Linen / Just 4 Linen") and "Incentive running for this region" toggle | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-settings.png) |
+| 23 | Critical | Content | Subtitle | no version text | "... All changes are audit-logged - **version undefined**" (an unresolved variable shown to users) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-settings.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-settings.png) |
+| 24 | Minor | Copy | Subtitle wording | "Changes apply to the next scoring cycle" | "Changes apply from now forward" | same as #23 |
+| 25 | Critical | Missing element | Yellow notice "Effective from save-time forward. Changes apply to the next scoring run; deductions already applied ... are NOT retroactively recalculated ..." (static in the prototype) | present | absent (page text search found no "effective from") | same as #23 |
+| 26 | Critical | Missing element | "Add custom deduction" section with Edit/Archive actions (static container and button in the prototype) | present | absent (page text search found no "custom deduction") | [settings diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/settings-diff.txt) |
+| 27 | Minor | Typography | Form field labels | letter-spacing 0.4px, colour `rgb(95,107,122)`, margin-bottom 6px | 0.3px, `rgb(71,85,105)`, 0px | [raw diff](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/settings-diff.txt) |
+| 28 | Minor | Typography | Native radio input | Arial 13.33px, `rgb(84,84,84)` | Roboto 14px, `rgb(15,23,42)` | same as #27 |
+| 29 | Minor | Style | Save Changes button (colour and shape only; enabled/disabled state excluded) | `rgb(56,130,246)`, radius 7px | `rgb(59,130,246)`, radius 8px | same as #27 |
 
-### Floor Display (`/display`) @ 1536px - live compared in its unpaired state
-The live display shows "Screen not set up - Open this display once with its screen token to pair it". Pairing needs a token issued from Settings; creating one would be creating data I would have to track and revoke, so I did not. The prototype is shown with seeded data, so the podium and ranked list have nothing to compare against.
+### Floor Display (`/display`) @ 1536px (live in its unpaired state)
+The live display shows "Screen not set up" and needs a pairing token from Settings. Creating one would create data to track and revoke, so it was not done. Only static styling was compared.
 
 | # | Severity | Category | Element | Prototype | Live | Evidence |
 |---|---|---|---|---|---|---|
-| 43 | Major | Typography | Title "DRIVER PERFORMANCE LEAGUE" font family | `Roboto, system-ui, sans-serif`, 38px / 800 / letter-spacing 6px | `Catamaran, sans-serif`, 38px / 800 / 6px (size, weight, spacing, colour `rgb(226,232,240)` all match) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-floor-display.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-floor-display.png) |
-| 44 | Major | Colour | Page background | flat dark grey (no gradient) | navy radial gradient `rgb(13,26,56)` -> `rgb(4,9,26)` with a star-field effect | same as #43 |
-| 45 | Major | Content | Sub-heading line | "Q2 2026 - WEEK 3 OF 13 - LIVE - UPDATES EVERY 15 MIN" | "CURRENT QUARTER 13:27" (a clock) | same as #43 |
-| 46 | Minor | Layout | Extra controls | none | "Scroll View" and "Vertical" links bottom right, telematics legend ("Green >= 85%, Amber 75-84%, Red < 75%") in the footer bar | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-floor-display.png) |
+| 30 | Major | Typography | Title "DRIVER PERFORMANCE LEAGUE" font family | `Roboto, system-ui, sans-serif` (38px / 800 / 6px / `rgb(226,232,240)`) | `Catamaran, sans-serif` (size, weight, spacing and colour match) | [proto](Driver-Rewards-Dashboard_2026-10-12_evidence/proto-floor-display.png) / [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-floor-display.png) |
+| 31 | Major | Colour | Page background | flat dark grey | navy radial gradient `rgb(13,26,56)` to `rgb(4,9,26)` with a star-field effect | same as #30 |
 
-Matched with no difference: brand line "DASH LINEN HIRE UK - BESPOKE LAUNDRY SERVICE" (Roboto 14px / 400 / 4px / `rgb(148,163,184)` / uppercase).
+Matched with no difference: brand line (Roboto 14px / 400 / 4px / `rgb(148,163,184)` / uppercase).
 
-### Live-only pages (gaps: no prototype counterpart, so no severity)
+## Needs confirmation (not counted)
+No severity until the question is answered.
+
+| # | Screen | Element | Prototype | Live | Why unconfirmed | Question |
+|---|---|---|---|---|---|---|
+| N1 | Shell | Header RAG counters ("8 Green / 3 Amber / 1 Red") | shown | absent | rendered by JS from driver data; may be hidden at zero | Should the counters show with zero drivers? |
+| N2 | Shell, Settings | Role banner ("Super Admin - Full access - ...") and the "Super Admin" badge beside Save | shown | absent | driven by the prototype's persona table (`roleDesc`), a demo device; live is also Super-Admin | Is a role banner part of the product? |
+| N3 | Shell | User chip styling (blue initials circle with outlined pill vs dark circle) | blue | dark | avatar colour may be per user or per role | Is the avatar colour fixed or per user? |
+| N4 | Shell | Sidebar "Incidents <- Prolius" | placeholder link (`return false`) | absent; live has "Review Queue" | not a real screen in the prototype | Is Review Queue its replacement? |
+| N5 | Users | Subtitle | "Super Admin only - ... auto-synced from **fleetmastr**" | "... auto-synced from **Prolius**" | the prototype says Prolius on every other screen | Which source name is right, and is "Super Admin only" still wanted? |
+| N6 | Scoreboard | RAG filter | chips "All / Green / Amber / Red" | one "All Drivers" dropdown | the dropdown was not opened | Does the dropdown list the same options? |
+| N7 | Scoreboard | Locked period pills (Q1, 6 months, 12 months) | opacity 1, cursor pointer | opacity 0.55, cursor default | live pills are disabled; may be state, not design | Should locked periods look disabled? |
+| N8 | Users | "Suspend" row action | Edit + Suspend | Edit only | only the signed-in Super-Admin row exists; may be intentional for your own account | Is Suspend hidden for your own account? |
+| N9 | Daily Input | "Save today's input" button | present | absent | live has no drivers; the button may need rows | Does the button appear once drivers exist? |
+| N10 | Shell | Brand tagline | "PERFORMANCE-TO-ZERO" | "BESPOKE LAUNDRY SERVICE" | tenant branding may be configuration | Is the tagline configurable? |
+
+## Excluded as dynamic or state-dependent
+Not deviations. Class codes are in the skill's `references/dynamic-content.md`.
+
+| Screen | Element | Prototype | Live | Class |
+|---|---|---|---|---|
+| Shell | user chip name | Helen Marsden | Super-Admin | I |
+| Shell | "Fleet bonus remaining" | £343 | "Fleet avg: £0 remaining" | D |
+| Shell, Payout | header and subtitle period ("Q2 2026 - Week 3 of 13") | shown | shown in header, absent in the Payout subtitle | T |
+| Shell | Quick stats values (88%, 2.1, 8, 3, 1) | seeded | 0 / empty | D |
+| Scoreboard | podium, driver cards, rank cards | 12 drivers | none | D |
+| Scoreboard | RAG counts "(12) (8) (3) (1)" | seeded | "(0)" | D |
+| Scoreboard | "No Employee-of-the-Month candidate ... October 2026" banner | none | shown | T/D |
+| Daily Input | subtitle date | 18 Apr 2026 · Fri | Mon, 12 Oct 2026 | T |
+| Payout | export button label | "Export Q2 2026 Payout" | "Export payout" | T |
+| Payout | summary card values and captions (£1,080, 14, 86%, "across all 12 drivers") | seeded | £0.00, 0 of 0 | D |
+| Payout | card 1 label "Total Deducted (Q2 to date)" | period named | "Total deducted this quarter" | T |
+| Payout | export button disabled and 50% opacity | enabled | disabled | ST |
+| Payout, Audit, Users | table rows | seeded | empty or one row | D |
+| Audit | column widths | 222/191/268/270/288 | 162/343/94/101/530 | D (auto-sized to content) |
+| Users | row values (names, phones, last login) | seeded | Super-Admin row | D |
+| Settings | Save Changes disabled | enabled | disabled (nothing edited) | ST |
+| Settings | no bonus-period option selected; "Locked for the current cycle (Q2 2026 - ends 30 Jun)" notice and highlighted card | calendar quarter selected, locked | none selected, no notice | ST |
+| Settings | pilot-mode copy ("September pilot quarter ... January launch") | dated | generic | T |
+| Floor Display | sub-heading ("Q2 2026 - Week 3 of 13 - Live ...") and missing podium/list | seeded | "Current quarter" and clock, unpaired | ST/T |
+
+## Live-only pages (gaps, no prototype counterpart)
 | Live page | What it shows (empty data) | Evidence |
 |---|---|---|
-| `/admin/queues` Review Queue | "Nothing waiting" badge; three cards: Unmapped drivers, Unattributed journeys, Unclassified incidents, each 0 | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-queues.png) |
-| `/admin/settings/regions` Region mapping | table (Region, Prolius ID, Brand, Last changed), "No regions yet", Save button disabled | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-regions.png) |
-| `/management` Fleet Overview | read-only stat cards (Total/Green/Amber/Red), Both / Dash Linen / Just 4 Linen filter, driver table | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-management.png) |
-| `/management/rankings` Fleet Rankings | period buttons (Today ... This year), cross-company league table | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-management-rankings.png) |
+| `/admin/queues` Review Queue | "Nothing waiting" badge; cards Unmapped drivers, Unattributed journeys, Unclassified incidents | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-queues.png) |
+| `/admin/settings/regions` Region mapping | table (Region, Prolius ID, Brand, Last changed), "No regions yet" | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-regions.png) |
+| `/management` Fleet Overview | read-only stat cards, Both / Dash Linen / Just 4 Linen filter, driver table | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-management.png) |
+| `/management/rankings` Fleet Rankings | period buttons, cross-company league table | [live](Driver-Rewards-Dashboard_2026-10-12_evidence/live-management-rankings.png) |
 | `/display/scroll`, `/display/vertical` | floor-display variants, not opened (same pairing requirement) | - |
 | `/admin/drivers/:id/coaching`, `/management/insights/:id` | need a driver id, not opened | - |
 
-### Observations that are not prototype deviations
-- **Quarter label vs date on live:** `/management/rankings` is headed "Q2 2026" but its own period line reads "2026-10-01 to 2026-12-31" (that is Q4), and the app header says "Q2 2026 - Week 3 of 13" on 12 Oct 2026. Either the labels are hard-coded or the quarter logic is off. Not scored because the prototype's "Q2 2026 - Week 3" is sample data.
-- **Audit Log live row:** actor cell renders as "S( system (first super admin bootstrap)", which looks like a stray character in the avatar/initial markup. Not scored (one sample row).
+## Observations (not prototype deviations, not counted)
+- **Font loading blocked by CSP:** every live page load logs 8 errors, `font-src 'self'` blocking `data:font/woff2` and `woff` fonts ([console log](Driver-Rewards-Dashboard_2026-10-12_evidence/raw/live-console-errors.txt)). The prototype loads no such fonts, so this is a live-environment issue.
+- **Quarter label vs date:** `/management/rankings` is headed "Q2 2026" but its period line reads 2026-10-01 to 2026-12-31 (Q4), and the app header says "Q2 2026 - Week 3 of 13" on 12 Oct 2026. The labels may be hard-coded or the quarter logic may be off.
+- **Audit Log row:** the actor cell renders "S( system (first super admin bootstrap)", which looks like a stray character in the avatar markup.
+- **Live-only content on matched pages:** a Region selector and an "Incentive running for this region" toggle on Settings, "Scroll View" / "Vertical" links and a telematics legend on the Floor Display. These are additions, not omissions.
+- **Prototype toolbar:** the prototype's top bar ("Hi-fi v2", Management / Floor Display / Driver PWA tabs, "Prolius (configure)", "Custom build") is a demo device and was ignored.
 
 ## Not verified
-- **Driver PWA** (prototype: Score / League / Profile in a phone frame): the live driver routes redirect a Super-Admin to `/login`, so they need a driver-role account. I did not log in as a driver and did not ask for driver credentials. Needs a driver session from you.
+- **Driver PWA** (Score / League / Profile): the live driver routes redirect a Super-Admin to `/login`, so they need a driver-role session. No driver credentials were requested.
 - **Floor Display populated state** (podium, ranked list, RAG bars) and the Scroll / Vertical variants: need a paired screen token.
-- **Driver Detail and Coaching**: need at least one driver.
-- **Data-dependent UI** (podium, driver cards/rank, RAG colours on real values, table rows, deductions, payouts, charts): live has no drivers or incidents, and I did not create any. Re-run after seeding or on a populated environment.
-- **Hover, focus, active, disabled and keyboard behaviour, form validation, modals, sorting, transitions:** not exercised. Only static computed styles and screenshots were compared. Prototype interactions (`navM`, modals "Log incident", "Invite Admin", etc.) were not driven on either side.
-- **Responsive behaviour:** only 1536x864 was compared (user choice). Other widths untested.
-- **Accessibility:** contrast ratios, heading order, landmarks and tab order were not computed.
-- Style extraction caps at 400 elements per page. Long pages (Settings) may have been truncated; #36 was confirmed with a separate full-text search.
+- **Driver Detail and Coaching:** need at least one driver.
+- **Data-dependent UI** (podium, driver cards, RAG values, table rows, deductions, payouts, charts): live has no drivers or incidents. Re-run on a populated environment or with marked test records.
+- **Behaviour** (hover, focus, keyboard, form validation, modals, sorting, transitions): not exercised.
+- **Responsive behaviour:** only 1536x864 was compared.
+- **Accessibility:** contrast, heading order, landmarks and tab order were not computed.
+- **Collapsed controls:** the live "All Drivers" dropdown was not opened (see N6).
 
 ## Test data created and cleaned up
-None created, so nothing to delete. Cleanup: the prototype server (`python -m http.server 8765`) was started twice and stopped after the first pass; the second instance is stopped at the end of this pass (see chat). The Playwright browser and its tabs (opened by the session) were left open.
+None created, so nothing to delete. Local prototype servers I started were stopped. The Playwright browser and its tabs were left open.

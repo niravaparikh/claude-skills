@@ -1,6 +1,26 @@
 {
   "name": "claude-skills",
-  "owner": { "name": "niravaparikh" },
-  "metadata": { "description": "Personal collection of Claude skills, one plugin per skill." },
-  "plugins": []
+  "owner": {
+    "name": "niravaparikh"
+  },
+  "metadata": {
+    "description": "Personal collection of Claude skills, one plugin per skill."
+  },
+  "plugins": [
+    {
+      "name": "ui-prototype-compare",
+      "source": "./plugins/ui-prototype-compare",
+      "description": "Compare a UI/UX prototype against the live website with evidence-backed reports"
+    },
+    {
+      "name": "pr-review",
+      "source": "./plugins/pr-review",
+      "description": "Review a GitHub pull request against the project's own Claude rules and coding standards, with core/component blast-radius analysis, via gh (read-only)"
+    },
+    {
+      "name": "qa-test-execution",
+      "source": "./plugins/qa-test-execution",
+      "description": "Execute a folder of [API]/[Browser] test cases (Excel/CSV) against a live app with parallel agents and a user-provided login, and write a feature-wise HTML results report"
+    }
+  ]
 }

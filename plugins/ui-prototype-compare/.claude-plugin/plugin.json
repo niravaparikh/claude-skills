@@ -1,0 +1,5 @@
+{
+  "name": "ui-prototype-compare",
+  "description": "Compare a UI/UX prototype against the live website (look and feel, CSS tokens, behaviour, responsiveness, accessibility) using the Playwright MCP browser",
+  "version": "0.2.0"
+}

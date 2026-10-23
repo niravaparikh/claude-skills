@@ -3,3 +3,8 @@ Thumbs.db
 __pycache__/
 *.pyc
 .claude/settings.local.json
+reports/*
+!reports/.gitkeep
+.playwright-mcp/
+reports/Driver-Rewards-Dashboard_2026-10-12.md
+  

@@ -1,0 +1,5 @@
+{
+  "name": "pr-review",
+  "description": "Review a GitHub pull request against the project's own Claude rules and coding standards, with core/component blast-radius analysis, via gh (read-only). Writes an evidence-backed Markdown report.",
+  "version": "0.1.0"
+}
