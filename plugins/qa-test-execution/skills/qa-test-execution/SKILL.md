@@ -74,6 +74,8 @@ If no API host was seen, ask the user for the API base URL. Never guess it.
 
 ### 5. Plan the parallel run (max 3 agents)
 
+**Models: plan with Opus, execute with Sonnet.** Planning decides dependency order, lane grouping, which role each case needs, what data a case creates and what it must not touch, so a weak plan costs far more than the planner's tokens. Spawn one planning agent with `model: "opus"` (Agent tool), give it the inventory and the rules above, and have it write the run plan (lanes, order, roles, shared data, cases likely to need review) to the session dir. Review that plan, then spawn the runner agents with `model: "sonnet"` explicitly, so execution does not depend on the session default. Never let a runner re-plan; if a runner finds the plan wrong, it stops and reports.
+
 Build a run plan from the inventory:
 - **Dependencies stay in order.** Within a feature file, stories linked by `Execution Order` run in that sequence; a case marked `depends_on_previous` runs after its predecessor in the same story. Never parallelise inside a dependency chain.
 - **Independent features run in parallel, up to 3 agents at once.** Start with features that have no cross-feature reference and no shared write target. Group the 9 sample features into at most 3 lanes so each lane is internally ordered and lanes are independent; launch 3, then feed the next feature to a lane as it frees up.
@@ -104,6 +106,7 @@ Delete every record the run created (via the API, only from your list), then del
 - **Fail** — ran, behaviour contradicted a clear expected result. Attach the issue and evidence.
 - **Blocked** — could not run: missing role/session, unmet precondition you could not set up, forged-token-only case, dependency that failed. Say why.
 - **Skipped** — deliberately not run (e.g. it would modify pre-existing data you must not touch). Say why.
+- **Manual** — the user has asked to check this case themselves (for example an email or a link only they can open). Record what was done and exactly what they should check; it is not an open question.
 - **Needs review** — ran, but the expected result is ambiguous (a `[NEEDS CLARIFICATION]` note, or the spec allows more than one outcome). Record the actual behaviour and the exact question.
 
 ## Severity of issues

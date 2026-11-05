@@ -17,10 +17,10 @@ Classify every difference into one class **before** rating it. Only class S can 
 
 ## Rules
 
-1. **Align state before comparing.** Same role, same screen state, same breakpoint. If the live site is empty and the prototype is seeded, tell the user in the first status message and ask whether to (a) use a populated environment, (b) create marked test records (`ZZ-UIQA-...`) that you later delete, or (c) compare static parts only. Do not silently proceed and then list the missing data as findings.
+1. **Align state before comparing.** Same role, same screen state, same breakpoint. If the live site is empty and the prototype is seeded, say so in the first status message and in the report header, and compare static parts only (creating marked `ZZ-UIQA-...` records only if the user already authorised it, and deleting them afterwards). Do not list the missing data as findings.
 2. **Never compare truncated text.** Compare the full string. Truncating to 60 characters made two subtitles look reworded when only their tails differed.
 3. **Interactive controls must be opened.** A dropdown, tab, accordion or toggle that is collapsed on live must be opened and screenshotted before saying it differs from a row of buttons in the prototype.
 4. **Element width and height are not tokens** for table cells, flex children and anything that auto-sizes. Compare them only for fixed-size elements (buttons, inputs, icons, sidebar, header).
 5. **Missing is not Critical until the condition is known.** Missing and unconditional = Critical. Missing and possibly conditional = Needs confirmation.
 6. **Check the prototype against itself.** Search its source for the live wording before reporting a wording difference. If the live wording appears elsewhere in the prototype, class P.
-7. **Show your filtering.** The report lists what was excluded as D, I, T, ST, so a reader can see nothing was hidden and can overrule a classification.
+7. **Hide nothing.** The report lists every D, I, T, ST and C difference in its Dynamic differences section, so a reader can see nothing was dropped and can overrule a classification.

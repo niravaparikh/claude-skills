@@ -8,6 +8,8 @@ The user logs in by hand. Claude never sees or types credentials. When the user
 says they are done, Claude creates <session-dir>/<role>.done and this script:
   - saves Playwright storageState to <role>.state.json
   - records sessionStorage and the bearer token the app itself sends, to <role>.auth.json
+  - records the refresh token the app's login/refresh response returned, so API calls can
+    renew a short-lived access token via qa_session.refresh_session
   - prints a summary (API hosts seen, token claims such as exp/roles/permissions),
     never the token or cookie values.
 """
@@ -18,7 +20,7 @@ import sys
 import time
 from collections import defaultdict
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from qa_session import decode_jwt, launch_browser  # noqa: E402
@@ -44,6 +46,7 @@ def main():
 
     hosts = defaultdict(lambda: {"requests": 0, "with_auth": 0, "paths": set()})
     bearer = {"token": None, "origin": None}
+    refresh = {"token": None, "field": None, "path": None, "url": None, "style": None, "client_id": None}
 
     def on_request(req):
         if req.resource_type not in ("xhr", "fetch"):
@@ -59,10 +62,45 @@ def main():
             h["with_auth"] += 1
             bearer["token"], bearer["origin"] = auth[7:].strip(), origin
 
+    def on_response(resp):
+        """Learn the refresh token the app's own login/refresh response hands out (kept in memory,
+        written only to <role>.auth.json). Latest one wins, so rotation by the app is followed."""
+        if resp.request.resource_type not in ("xhr", "fetch") or resp.status >= 400:
+            return
+        u = urlsplit(resp.url)
+        if not re.search(r"/(login|refresh|token|callback|sso)", u.path, re.I):
+            return
+        try:
+            body = resp.json()
+        except Exception:  # noqa: BLE001 - not JSON / body gone
+            return
+        # An OAuth2/OIDC token endpoint (Keycloak etc.) takes a form-encoded grant_type; keep only
+        # the URL and the public client_id, never the code, verifier or any secret in the body.
+        style, client_id = "json", None
+        try:
+            form = parse_qs(resp.request.post_data or "")
+        except Exception:  # noqa: BLE001 - binary/odd body
+            form = {}
+        if "grant_type" in form:
+            style, client_id = "oauth", (form.get("client_id") or [None])[0]
+        stack = [body]
+        while stack:
+            cur = stack.pop()
+            if isinstance(cur, dict):
+                for k, v in cur.items():
+                    if isinstance(v, str) and v and re.fullmatch(r"refresh[_-]?token", k, re.I):
+                        refresh.update(token=v, field=k, path=u.path, url=f"{u.scheme}://{u.netloc}{u.path}",
+                                       style=style, client_id=client_id)
+                    elif isinstance(v, (dict, list)):
+                        stack.append(v)
+            elif isinstance(cur, list):
+                stack.extend(x for x in cur if isinstance(x, (dict, list)))
+
     with sync_playwright() as p:
         browser = launch_browser(p, headless=False)
         ctx = browser.new_context(viewport=None)
         ctx.on("request", on_request)
+        ctx.on("response", on_response)
         page = ctx.new_page()
         page.goto(a.url)
         print(f"WAITING role={a.role}: browser open at {a.url}. Create {done} after the user has logged in.", flush=True)
@@ -107,6 +145,9 @@ def main():
         auth = {
             "role": a.role, "app_url": a.url, "final_url": page.url, "captured_at": int(time.time()),
             "bearer": bearer["token"], "bearer_source": source, "bearer_origin": bearer["origin"],
+            "refresh_token": refresh["token"], "refresh_field": refresh["field"],
+            "refresh_issued_by": refresh["path"], "refresh_url": refresh["url"],
+            "refresh_style": refresh["style"], "oauth_client_id": refresh["client_id"],
             "claims": claims or {}, "session_storage": session_storage,
             "api_hosts": [{"origin": o, "requests": v["requests"], "with_auth": v["with_auth"],
                            "sample_paths": sorted(v["paths"])}
@@ -122,6 +163,8 @@ def main():
     print(json.dumps({
         "SAVED": a.role, "final_url": auth["final_url"],
         "bearer_found": bool(bearer["token"]), "bearer_source": source,
+        "refresh_token_found": bool(refresh["token"]), "refresh_issued_by": refresh["path"],
+        "refresh_style": refresh["style"],
         "claims": shown, "cookies": len(cookies),
         "api_hosts": auth["api_hosts"][:6],
         "hint": None if auth["api_hosts"] else "No XHR/fetch calls seen. Ask the user to open a data screen, then log in again.",

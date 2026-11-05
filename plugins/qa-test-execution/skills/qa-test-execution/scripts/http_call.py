@@ -22,6 +22,7 @@ stdout: JSON {status, elapsed_ms, headers, body|body_text, body_saved_to}. Token
 Authorization values are never printed or logged. Exit 3 = SESSION_EXPIRED, 4 = NO_SESSION.
 """
 import argparse
+import os
 import json
 import sys
 import time
@@ -31,7 +32,7 @@ from urllib.parse import urljoin, urlsplit
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from qa_session import decode_jwt, load_role, load_run, token_expired  # noqa: E402
+from qa_session import decode_jwt, load_role, load_run, refresh_session, token_expired  # noqa: E402
 
 SECRET_HEADERS = {"authorization", "cookie", "set-cookie", "proxy-authorization", "x-api-key"}
 # An unmistakably invalid JWT-shaped string: three non-decodable segments. Used to
@@ -111,6 +112,10 @@ def main():
     a = ap.parse_args()
 
     role_data = load_role(a.session_dir, a.role)  # exits NO_SESSION if absent
+    if a.token_variant == "valid" and a.auth in ("auto", "bearer", "both") and token_expired(role_data["auth"]):
+        base = load_run(a.session_dir).get("api_base")
+        if base and os.environ.get("QA_ALLOW_REFRESH") == "1" and refresh_session(a.session_dir, a.role, base):
+            role_data = load_role(a.session_dir, a.role)
     if a.token_variant == "valid" and a.auth in ("auto", "bearer", "both") and token_expired(role_data["auth"]):
         print(json.dumps({"error": "SESSION_EXPIRED", "role": a.role,
                           "hint": "Ask the user to log in again for this role."}))

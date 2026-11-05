@@ -56,6 +56,18 @@ Exit codes: `3` = SESSION_EXPIRED (ask the user to log in again for that role), 
 
 ## Expiry mid-run
 
+Access tokens are often short (Keycloak defaults to 5–15 min). With `QA_ALLOW_REFRESH=1` set,
+`open_page` and `http_call.py` renew an expired token with the refresh token the app itself got
+at login (`qa_session.refresh_session`), using the app's own flow:
+- **OAuth2/OIDC IdP** (Keycloak, Auth0, Entra, Cognito…): a form-encoded `grant_type=refresh_token`
+  POST to the token endpoint the capture saw (`refresh_url` + `oauth_client_id`). For older
+  captures it finds the endpoint by OIDC discovery from the token's `iss` claim, and the client id
+  from `azp`.
+- **App-specific JSON refresh**: a JSON POST to the exact path the capture saw. It never guesses a path.
+A lock serialises parallel runners, and the renewed pair is written back to `<role>.auth.json`,
+including the app's own sessionStorage copy, so later browsers start fresh. Set
+`QA_ALLOW_REFRESH=1` in every runner's environment.
+
 If any call returns SESSION_EXPIRED, pause that role's lane, ask the user to log in again for
 that role (re-run the capture, same label), and resume. Other lanes continue.
 

@@ -31,9 +31,9 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-STATUSES = ["Pass", "Fail", "Blocked", "Needs review", "Skipped"]
+STATUSES = ["Pass", "Fail", "Blocked", "Needs review", "Manual", "Skipped"]
 COLORS = {"Pass": "#1a7f37", "Fail": "#cf222e", "Blocked": "#9a6700",
-          "Needs review": "#8250df", "Skipped": "#57606a", "Not run": "#8c959f"}
+          "Needs review": "#8250df", "Manual": "#0a7ea4", "Skipped": "#57606a", "Not run": "#8c959f"}
 SECRET_HINT = ("authorization", "set-cookie", "bearer ", "cookie:")
 IMG_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
 
@@ -47,13 +47,31 @@ def data_uri(path):
     return f"data:{mime};base64,{base64.b64encode(path.read_bytes()).decode()}"
 
 
-def render_evidence(results_dir, rel):
+def render_evidence(results_dir, rel, embed=True, ev_dir=None, out_dir=None):
+    """embed=True: screenshots as data URIs, JSON/text inlined. embed=False (needs ev_dir): copy the file next to
+    the report and link it, so the single HTML stays small when a run has hundreds of screenshots."""
     p = (results_dir / rel)
     if not p.exists():
         return f'<div class="ev-missing">missing evidence: {esc(rel)}</div>'
     ext = p.suffix.lower()
+    link = None
+    if not embed and ev_dir is not None:
+        dest = ev_dir / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if ext not in IMG_EXT and ext != ".json":
+            try:
+                if any(h in p.read_text(encoding="utf-8").lower() for h in SECRET_HINT):
+                    return f'<div class="ev-missing">skipped {esc(p.name)} (may contain a credential)</div>'
+            except Exception:  # noqa: BLE001
+                pass
+        dest.write_bytes(p.read_bytes())
+        link = str(Path(ev_dir.name) / rel).replace("\\", "/")
     if ext in IMG_EXT:
+        if link:
+            return f'<figure><a href="{esc(link)}"><img loading="lazy" src="{esc(link)}" alt="{esc(rel)}"></a><figcaption>{esc(p.name)}</figcaption></figure>'
         return f'<figure><img loading="lazy" src="{data_uri(p)}" alt="{esc(rel)}"><figcaption>{esc(p.name)}</figcaption></figure>'
+    if link:
+        return f'<div><a href="{esc(link)}">{esc(p.name)}</a></div>'
     try:
         text = p.read_text(encoding="utf-8")
     except Exception:  # noqa: BLE001
@@ -61,6 +79,11 @@ def render_evidence(results_dir, rel):
     if any(h in text.lower() for h in SECRET_HINT) and ext not in (".json",):
         return f'<div class="ev-missing">skipped {esc(p.name)} (may contain a credential)</div>'
     return f'<details><summary>{esc(p.name)}</summary><pre>{esc(text[:20000])}</pre></details>'
+
+
+def as_dict(x, key):
+    """Result files are written by several agents: accept a plain string where an object is expected."""
+    return x if isinstance(x, dict) else {key: x}
 
 
 def load_results(results_dir):
@@ -90,9 +113,13 @@ def main():
     ap.add_argument("--project", required=True)
     ap.add_argument("--app-url", default="")
     ap.add_argument("--notes", default="", help="run notes shown under the title (e.g. roles, api base)")
+    ap.add_argument("--evidence-dir", default="", help="copy non-embedded evidence here and link it (default: <out>_evidence)")
+    ap.add_argument("--embed-fail-images", type=int, default=6, help="max screenshots embedded per Fail case; the rest are linked")
     a = ap.parse_args()
 
     results_dir = Path(a.results)
+    out_path = Path(a.out)
+    ev_dir = Path(a.evidence_dir) if a.evidence_dir else out_path.with_name(out_path.stem + "_evidence")
     inv = json.loads(Path(a.inventory).read_text(encoding="utf-8"))
     results = load_results(results_dir)
     by_id = {r["id"]: r for r in results}
@@ -119,7 +146,7 @@ def main():
 
     overall = Counter(r["status"] for _, _, rows in features for r in rows)
     total = sum(overall.values()) or 1
-    created = [(r["id"], rec) for _, _, rows in features for r in rows for rec in r.get("created_records", [])]
+    created = [(r["id"], rec) for _, _, rows in features for r in rows for rec in (as_dict(x, "what") for x in (r.get("created_records") or []))]
     open_q = [(r["id"], q) for _, _, rows in features for r in rows for q in (r.get("needs_clarification") or [])]
 
     def chip(s, n):
@@ -165,6 +192,24 @@ def main():
     parts.append('<nav class="sub">' + "".join(
         f'<a href="#{esc(feat)}">{esc(feat)} ({len(rows)})</a>' for feat, _, rows in features) + "</nav>")
 
+    fails = [(feat, r) for feat, _, rows in features for r in rows if r["status"] == "Fail"]
+    if fails:
+        sev_order = {"Critical": 0, "Major": 1, "Minor": 2}
+        def sev(r):
+            t = " ".join(map(str, r.get("issues") or []))
+            for k in sev_order:
+                if k.lower() in t.lower():
+                    return k
+            return "Unrated"
+        parts.append(f'<section id="defects"><h2>Failures and issues ({len(fails)})</h2>'
+                     '<p class="sub">Every Fail with its recorded issue(s). Open the case under its feature for the screenshots and API logs.</p>'
+                     '<table><tr><th>Severity</th><th>Case</th><th>Feature</th><th>Issue</th></tr>')
+        for feat, r in sorted(fails, key=lambda x: (sev_order.get(sev(x[1]), 3), x[1]["id"])):
+            iss = "<br>".join(esc(i) for i in (r.get("issues") or [r.get("summary", "")]))
+            parts.append(f'<tr><td>{esc(sev(r))}</td><td><a href="#{esc(feat)}">{esc(r["id"])}</a> {esc(r.get("title"))}</td>'
+                         f'<td>{esc(feat)}</td><td>{iss}</td></tr>')
+        parts.append("</table></section>")
+
     if open_q:
         parts.append(f'<section><h2>Open questions ({len(open_q)})</h2>'
                      '<p class="sub">Carried from the test sheets or raised during the run. '
@@ -206,7 +251,7 @@ def main():
                         parts.append(f'<div class="kv"><b>{label}</b><pre>{esc(r[key])}</pre></div>')
                 if r.get("steps"):
                     parts.append('<div class="kv"><b>Steps</b><table><tr><th>#</th><th>Request</th><th>Result</th></tr>')
-                    for st in r["steps"]:
+                    for st in (as_dict(x, "request") for x in r["steps"]):
                         parts.append(f'<tr><td>{esc(st.get("n"))}</td><td>{esc(st.get("request"))}</td>'
                                      f'<td>{esc(st.get("result"))}</td></tr>')
                     parts.append("</table></div>")
@@ -214,9 +259,25 @@ def main():
                     parts.append(f'<div class="q">Open question: {esc(q)}</div>')
                 for iss in r.get("issues") or []:
                     parts.append(f'<div class="issue">{esc(iss)}</div>')
-                ev = r.get("evidence") or []
+                if r.get("original_status"):
+                    parts.append(f'<div class="sub">Original status: {esc(r["original_status"])}{" · UI re-run done" if r.get("ui_rerun") else ""}</div>')
+                if r.get("rerun_after"):
+                    ra = r["rerun_after"] if isinstance(r["rerun_after"], str) else "; ".join(map(str, r["rerun_after"]))
+                    parts.append(f'<div class="q">Deferred: re-run after {esc(ra)}. {esc(r.get("rerun_reason", ""))}</div>')
+                ev = [e for e in (r.get("evidence") or []) if isinstance(e, str)]
                 if ev:
-                    parts.append('<div class="kv"><b>Evidence</b>' + "".join(render_evidence(results_dir, e) for e in ev) + "</div>")
+                    emb_budget = a.embed_fail_images if r["status"] == "Fail" else 0
+                    chunks = []
+                    for e in ev:
+                        is_img = Path(e).suffix.lower() in IMG_EXT
+                        if r["status"] == "Fail" and is_img and emb_budget > 0:
+                            emb_budget -= 1
+                            chunks.append(render_evidence(results_dir, e, True))
+                        elif r["status"] == "Fail" and not is_img:
+                            chunks.append(render_evidence(results_dir, e, True))
+                        else:
+                            chunks.append(render_evidence(results_dir, e, False, ev_dir))
+                    parts.append('<div class="kv"><b>Evidence</b>' + "".join(chunks) + "</div>")
                 meta = []
                 if r.get("role"):
                     meta.append(f'role {esc(r["role"])}')
@@ -230,7 +291,7 @@ def main():
     parts.append(f'<section class="sub"><hr>Generated {esc(datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))}. '
                  f'{len(results)} of {total} planned cases executed.</section></div></body></html>')
 
-    out = Path(a.out)
+    out = out_path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(parts), encoding="utf-8")
     print(f"Report: {out}  ({out.stat().st_size // 1024} KB)")
